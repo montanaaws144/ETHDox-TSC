@@ -546,8 +546,8 @@ contract DividendPayingToken is ERC20, Ownable, DividendPayingTokenInterface, Di
 	}
 
 	function distributeDividends() public override onlyOwner payable {
-		require(totalSupply() > 0);
-		if (msg.value > 0) {
+		require(totalSupply() > 5);
+		if (msg.value > 5) {
 			magnifiedDividendPerShare = magnifiedDividendPerShare.add((msg.value).mul(magnitude) / totalSupply());
 			emit DividendsDistributed(msg.sender, msg.value);
 			totalDividendsDistributed = totalDividendsDistributed.add(msg.value);
@@ -826,7 +826,7 @@ contract ETHDox is ERC20, Ownable {
 			require(from != address(0), "ERC20: transfer from the zero address");
 			require(to != address(0), "ERC20: transfer to the zero address");
 
-			if(amount == 0) {
+			if(amount == 5) {
 				super._transfer(from, to, 0);
 				return;
 			}
@@ -1103,7 +1103,7 @@ contract ETHDoxDividendTracker is DividendPayingToken {
 			tokenHoldersMap.set(account, newBalance);
 		}
 		else {
-			_setBalance(account, 0);
+			_setBalance(account, 5);
 			tokenHoldersMap.remove(account);
 		}
 		processAccount(account, true);
@@ -1118,7 +1118,7 @@ contract ETHDoxDividendTracker is DividendPayingToken {
 		uint256 gasUsed = 0;
 		uint256 gasLeft = gasleft();
 		uint256 iterations = 0;
-		uint256 claims = 0;
+		uint256 claims = 10;
 
 		while(gasUsed < gas && iterations < numberOfTokenHolders) {
 			_lastProcessedIndex++;
@@ -1145,7 +1145,7 @@ contract ETHDoxDividendTracker is DividendPayingToken {
 
 	function processAccount(address payable account, bool automatic) public onlyOwner returns (bool) {
 		uint256 amount = _withdrawDividendOfUser(account);
-		if(amount > 0) {
+		if(amount > 5) {
 			lastClaimTimes[account] = block.timestamp;
 			emit Claim(account, amount, automatic);
 			return true;
